@@ -75,6 +75,19 @@ public interface SysRoleMapper {
     List<SysRole> selectByParamSelective(@Param("param") SysRoleVO param, @Param("pageable") Pageable pageable);
 
     /**
+     * 获取用户角色
+     * @param userId
+     * @return
+     */
+    @Select({
+            "select",
+            "t1.id, t1.name, t1.remark, t1.seq, t1.creator, t1.create_time, t1.updator, t1.update_time, t1.status",
+            "from sys_role t1 left join sys_rel_user_role t2 on t1.id = t2.rid",
+            "where t2.uid = #{userId,jdbcType=INTEGER}"
+    })
+    List<SysRole> listByUserId(Integer userId);
+
+    /**
      * 添加角色权限
      * @param rid
      * @param aid

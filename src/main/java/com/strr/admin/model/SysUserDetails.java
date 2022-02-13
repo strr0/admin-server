@@ -10,7 +10,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SysUserDetails extends SysUser implements UserDetails {
+    private List<SysRole> roleList;
     private List<SysAuthority> authorityList;
+
+    @JsonIgnore
+    public List<SysRole> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<SysRole> roleList) {
+        this.roleList = roleList;
+    }
 
     @JsonIgnore
     public List<SysAuthority> getAuthorityList() {
@@ -24,7 +34,7 @@ public class SysUserDetails extends SysUser implements UserDetails {
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorityList.stream().map(authority -> new SimpleGrantedAuthority(authority.getName()))
+        return roleList.stream().map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
     }
 

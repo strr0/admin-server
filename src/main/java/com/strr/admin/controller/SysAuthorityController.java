@@ -12,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin/sysAuthority")
@@ -84,9 +86,11 @@ public class SysAuthorityController {
      * @return
      */
     @GetMapping("/userMenuTree")
-    public Result<List<SysAuthorityVO>> userMenuTree(@AuthenticationPrincipal SysUserDetails sysUserDetails) {
-        List<SysAuthority> authorityList = sysUserDetails.getAuthorityList();
-        return Result.ok(SysUtil.buildMenuTree(authorityList));
+    public Result<Map<String, Object>> userMenuTree(@AuthenticationPrincipal SysUserDetails sysUserDetails) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", sysUserDetails);
+        map.put("menus", SysUtil.buildMenuTree(sysUserDetails.getAuthorityList()));
+        return Result.ok(map);
     }
 
     /**
