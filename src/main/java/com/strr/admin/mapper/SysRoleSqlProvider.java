@@ -3,6 +3,7 @@ package com.strr.admin.mapper;
 import com.strr.admin.model.SysRole;
 import com.strr.admin.model.SysRoleVO;
 import org.apache.ibatis.jdbc.SQL;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Map;
 
@@ -202,8 +203,9 @@ public class SysRoleSqlProvider {
         sql.SELECT("status");
         sql.FROM("sys_role");
         applyWhere(sql, param);
-        
-        sql.LIMIT("#{pageable.pageNumber}, #{pageable.pageSize}");
+
+        Pageable pageable = (Pageable) parameter.get("pageable");
+        sql.LIMIT(String.format("%d, %d", pageable.getPageNumber() * pageable.getPageSize(), pageable.getPageSize()));
         
         return sql.toString();
     }
